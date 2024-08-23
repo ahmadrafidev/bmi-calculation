@@ -7,11 +7,13 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { ExternalLink } from 'lucide-react'
 
+type Category = 'Underweight' | 'Normal weight' | 'Overweight' | 'Obese'
+
 export default function Component() {
   const [height, setHeight] = useState('')
   const [weight, setWeight] = useState('')
   const [bmi, setBmi] = useState<number | null>(null)
-  const [category, setCategory] = useState('')
+  const [category, setCategory] = useState<Category | ''>('')
 
   const calculateBMI = () => {
     const heightInMeters = parseFloat(height) / 100
@@ -36,7 +38,7 @@ export default function Component() {
     }
   }
 
-  const getCategoryColor = (category: string) => {
+  const getCategoryColor = (category: Category | '') => {
     switch (category) {
       case 'Underweight':
         return 'text-yellow-500 border-yellow-500'
@@ -51,8 +53,8 @@ export default function Component() {
     }
   }
 
-  const HealthResources = ({ category }: { category: string }) => {
-    const resources = {
+  const HealthResources = ({ category }: { category: Category }) => {
+    const resources: Record<Category, { name: string; url: string }[]> = {
       'Underweight': [
         { name: 'CDC - Underweight', url: 'https://www.cdc.gov/healthy-weight-growth/about/index.html' },
         { name: 'NHS - Underweight adults', url: 'https://www.nhs.uk/live-well/healthy-weight/managing-your-weight/advice-for-underweight-adults/' },
@@ -132,7 +134,7 @@ export default function Component() {
             <p className={`text-lg font-semibold ${getCategoryColor(category)}`}>
               Category: {category}
             </p>
-            <HealthResources category={category} />
+            {category && <HealthResources category={category as Category} />}
           </div>
         )}
       </CardFooter>
